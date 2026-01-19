@@ -27,6 +27,7 @@ export default function Home() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [game, setGame] = useState({});
+  const [playtime, setPlaytime] = useState({});
 
   const getTypeString = (type) => {
     switch (type) {
@@ -44,8 +45,12 @@ export default function Home() {
   };
 
   const selectGame = async (id) => {
-    const data = await fetch(`/api/igdb/game/${id}`).then((r) => r.json());
-    setGame(data);
+    const gameData = await fetch(`/api/igdb/game/${id}`).then((r) => r.json());
+    setGame(gameData);
+    const playtimeData = await fetch(`/api/igdb/game_time_to_beats/${id}`).then(
+      (r) => r.json()
+    );
+    setPlaytime(playtimeData);
   };
 
   useEffect(() => {
@@ -92,12 +97,13 @@ export default function Home() {
 
       {loading && <div>Searching…</div>}
 
-      {/* <pre>{JSON.stringify(results, null, 2)}</pre> */}
-
       <br />
       <br />
       <div>Selected Game:</div>
       <pre>{JSON.stringify(game, null, 2)}</pre>
+      <br />
+      <div>Playtimes to Beat:</div>
+      <pre>{JSON.stringify(playtime, null, 2)}</pre>
       <br />
       <div>Search:</div>
       <Grid>
