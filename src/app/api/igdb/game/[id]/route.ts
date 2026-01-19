@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const gameId = params.id;
+  const { id } = await context.params;
 
   const igdbQuery = `
     fields
@@ -21,7 +21,7 @@ export async function GET(
       artworks.image_id,
       aggregated_rating,
       rating;
-    where id = ${gameId};
+    where id = ${id};
     limit 1;
   `;
 
