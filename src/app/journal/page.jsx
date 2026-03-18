@@ -21,6 +21,7 @@ export default function JournalPage() {
       />
       <button onClick={handleSearch}>Search</button>
       <pre>{JSON.stringify(results, null, 2)}</pre>
+      Test to see if this is being picked up by claude on commit.
     </div>
   );
 }
