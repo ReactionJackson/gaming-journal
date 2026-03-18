@@ -3,6 +3,20 @@ import { NextResponse } from "next/server";
 export async function GET(req: any, context: any) {
   const { id } = await context.params;
 
+  const clientId = process.env.TWITCH_CLIENT_ID;
+  const accessToken = process.env.TWITCH_ACCESS_TOKEN;
+  if (!clientId || !accessToken) {
+    return NextResponse.json(
+      {
+        error: "Server misconfigured",
+        details: !clientId
+          ? "Missing TWITCH_CLIENT_ID in .env.local"
+          : "Missing TWITCH_ACCESS_TOKEN in .env.local",
+      },
+      { status: 500 }
+    );
+  }
+
   const igdbQuery = `
     fields
       id,
@@ -25,8 +39,8 @@ export async function GET(req: any, context: any) {
   const res = await fetch("https://api.igdb.com/v4/games", {
     method: "POST",
     headers: {
-      "Client-ID": process.env.TWITCH_CLIENT_ID!,
-      Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN!}`,
+      "Client-ID": clientId,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "text/plain",
     },
     body: igdbQuery,

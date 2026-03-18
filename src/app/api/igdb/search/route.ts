@@ -8,6 +8,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Missing query" }, { status: 400 });
   }
 
+  const clientId = process.env.TWITCH_CLIENT_ID;
+  const accessToken = process.env.TWITCH_ACCESS_TOKEN;
+  if (!clientId || !accessToken) {
+    return NextResponse.json(
+      {
+        error: "Server misconfigured",
+        details: !clientId
+          ? "Missing TWITCH_CLIENT_ID in .env.local"
+          : "Missing TWITCH_ACCESS_TOKEN in .env.local",
+      },
+      { status: 500 }
+    );
+  }
+
   const igdbQuery = `
     search "${query}";
     fields id, name, cover.image_id, game_type;
@@ -18,8 +32,8 @@ export async function GET(req: NextRequest) {
   const res = await fetch("https://api.igdb.com/v4/games", {
     method: "POST",
     headers: {
-      "Client-ID": process.env.TWITCH_CLIENT_ID!,
-      Authorization: `Bearer ${process.env.TWITCH_ACCESS_TOKEN!}`,
+      "Client-ID": clientId,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "text/plain",
     },
     body: igdbQuery,
