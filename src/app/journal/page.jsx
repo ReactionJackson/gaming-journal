@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Track from "@/app/collection/track";
 
 export default function JournalPage() {
   const [query, setQuery] = useState("");
@@ -21,7 +22,7 @@ export default function JournalPage() {
       />
       <button onClick={handleSearch}>Search</button>
       <pre>{JSON.stringify(results, null, 2)}</pre>
-      Test to see if this is being picked up by claude on commit. Test 2.
+      <Track />
     </div>
   );
 }
