@@ -1,4 +1,4 @@
-import { getGame } from "@/app/lib/igdb";
+import { getGame } from "@/lib/igdb";
 
 export async function GET(
   _request: Request,

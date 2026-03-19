@@ -1,4 +1,4 @@
-import { searchGames } from "@/app/lib/igdb";
+import { searchGames } from "@/lib/igdb";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

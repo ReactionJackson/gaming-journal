@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import styled from "styled-components";
-import Track from "@/app/components/track";
+import Track from "@/components/Track";
 
 const TrackItem = styled.li`
   display: flex;

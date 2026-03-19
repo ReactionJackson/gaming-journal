@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import { kvKey } from "@/app/lib/kvKey";
+import { kvKey } from "@/lib/kvKey";
 import { NextResponse } from "next/server";
 
 const redis = Redis.fromEnv();
