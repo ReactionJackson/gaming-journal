@@ -70,8 +70,8 @@ export default function JournalPage() {
       <button onClick={handleSearch}>Search</button>
       <pre>{JSON.stringify(results, null, 2)}</pre>
       <Track>
-        {[...Array(20)].map((_, index) => (
-          <TrackItem key={index}>Game {index + 1}</TrackItem>
+        {dummyEntries.map(({ date }, index) => (
+          <TrackItem key={index}>{date}</TrackItem>
         ))}
       </Track>
     </div>
