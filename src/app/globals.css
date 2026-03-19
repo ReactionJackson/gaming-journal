@@ -1,12 +1,13 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Outfit, sans-serif;
   font-synthesis: none;
-  color: #242020;
+  font-weight: 400;
+  color: #000000;
   width: 100%;
-  background-color: #ededed;
-  /* text-rendering: optimizeLegibility;
+  background-color: #ffffff;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
+  -moz-osx-font-smoothing: grayscale;
 }
 
 *,
