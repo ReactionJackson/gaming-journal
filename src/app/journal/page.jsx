@@ -201,6 +201,7 @@ export default function JournalPage() {
   const handleActiveChange = useCallback((index) => {
     setActiveIndex(index);
     localStorage.setItem(STORAGE_KEY, String(dayEntries[index].dayId));
+    window.scrollTo(0, 0);
   }, []);
 
   const dayEntry = dayEntries[activeIndex];
