@@ -365,7 +365,6 @@ const Track = forwardRef(function Track(
             </DateCircle>
           );
         })}
-        <PlusCircle>+</PlusCircle>
       </TrackInner>
     </TrackContainer>
   );
