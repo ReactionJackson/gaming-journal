@@ -5,6 +5,7 @@ import styled from "styled-components";
 import GameEntry from "@/components/GameEntry";
 import Track from "@/components/Track";
 import { dayEntries, games } from "@/data/entries";
+import TitleInput from "@/components/TitleInput";
 
 // ── Layout ────────────────────────────────────────────────────────────────────
 
@@ -14,7 +15,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* bottom padding clears the Track (90px) + Nav (50px) with some breathing room */
   padding: 0 20px 170px 20px;
 `;
 
@@ -39,6 +39,10 @@ const Header = styled.header`
   background-color: rgba(255, 255, 255, 0.75);
 `;
 
+const HeaderContent = styled.div`
+  width: 100%;
+`;
+
 const DateNumber = styled.span`
   display: flex;
   justify-content: center;
@@ -57,10 +61,9 @@ const DateNumber = styled.span`
 const Title = styled.h1`
   font-size: 22px;
   font-weight: 500;
+  line-height: 28px;
   letter-spacing: -0.02em;
-  & > * {
-    margin: 3px 0 -2px 0;
-  }
+  height: 28px;
 `;
 
 const FullDate = styled.div`
@@ -69,6 +72,7 @@ const FullDate = styled.div`
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.6);
   letter-spacing: 3px;
+  margin: 3px 0 -2px 0;
   span {
     color: rgba(0, 0, 0, 0.3);
   }
@@ -180,6 +184,8 @@ const STORAGE_KEY = "journal-active-day-id";
 export default function JournalPage() {
   // Start on the most recent entry (last in the sorted array)
   const [activeIndex, setActiveIndex] = useState(dayEntries.length - 1);
+  const [activeDayEntry, setActiveDayEntry] = useState(dayEntries[activeIndex]);
+  const [isEditing, setIsEditing] = useState(false);
   const trackRef = useRef(null);
 
   // ── Restore last-viewed entry from localStorage ───────────────────────────
@@ -195,6 +201,10 @@ export default function JournalPage() {
     trackRef.current?.scrollToIndex(idx);
   }, []);
 
+  useEffect(() => {
+    setActiveDayEntry(dayEntries[activeIndex]);
+  }, [activeIndex]);
+
   // ── Persist active entry — called on every user-driven change ─────────────
   // Writing here (not in an effect) means we only save when the user actually
   // navigates, so the mount read above is never overwritten by a stale default.
@@ -204,29 +214,42 @@ export default function JournalPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const dayEntry = dayEntries[activeIndex];
-  const dayNum = new Date(dayEntry.date).getUTCDate();
+  const handleActiveCircleTap = useCallback(() => {
+    setIsEditing((prev) => !prev);
+  }, []);
+
+  const { date, title, text, tags } = activeDayEntry;
+  const dayNum = new Date(date).getUTCDate();
   const resolvedGames =
-    dayEntry.games?.map(resolveGameEntry).filter(Boolean) ?? [];
+    activeDayEntry.games?.map(resolveGameEntry).filter(Boolean) ?? [];
 
   return (
     <>
       <Container>
         <Header>
           <DateNumber>{dayNum}</DateNumber>
-          <Title>
+          <HeaderContent>
             <FullDate>
-              {formatMonth(dayEntry.date)}{" "}
-              <span>{formatTime(dayEntry.date)}</span>
+              {formatMonth(date)} <span>{formatTime(date)}</span>
             </FullDate>
-            {dayEntry.title || getDayName(dayEntry.date)}
-          </Title>
+            {isEditing ? (
+              <TitleInput
+                value={title}
+                placeholder={getDayName(date)}
+                onChange={(value) =>
+                  setActiveDayEntry({ ...activeDayEntry, title: value })
+                }
+              />
+            ) : (
+              <Title>{title || getDayName(date)}</Title>
+            )}
+          </HeaderContent>
         </Header>
         <DayEntry>
-          {dayEntry.text && <Text>{dayEntry.text}</Text>}
-          {dayEntry.tags?.length > 0 && (
+          {text && <Text>{text}</Text>}
+          {tags?.length > 0 && (
             <Tags>
-              {dayEntry.tags.map((tag) => (
+              {tags.map((tag) => (
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </Tags>
@@ -247,7 +270,7 @@ export default function JournalPage() {
         entries={dayEntries}
         activeIndex={activeIndex}
         onActiveChange={handleActiveChange}
-        onActiveCircleTap={() => console.log("switching to edit mode")}
+        onActiveCircleTap={handleActiveCircleTap}
       />
     </>
   );

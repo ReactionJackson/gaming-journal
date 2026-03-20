@@ -101,7 +101,7 @@ export const dayEntries = [
   {
     dayId: 6,
     date: "2025-12-04T21:00:00.000Z",
-    title: null,
+    title: '',
     text: "First proper evening with Xenoblade 2. Been meaning to start this for ages and finally made the leap. The opening is a lot — characters, lore, names all thrown at you at once. But the world design is immediately striking, the cloud sea concept is unlike anything I've seen. Combat is completely opaque right now but I'm told it takes a few hours to click.",
     tags: ["First Session", "JRPG"],
     games: [{ gameId: 1, entryId: 0 }],
@@ -109,7 +109,7 @@ export const dayEntries = [
   {
     dayId: 7,
     date: "2025-12-09T20:30:00.000Z",
-    title: null,
+    title: '',
     text: "Good few hours on Xenoblade tonight. Combat is starting to make more sense — the flow arts and blade specials are clicking now. Got Nia in the party which is a big deal, she's immediately the most interesting character so far. The Mor Ardain section has been a highlight, the industrial aesthetic is a nice contrast to the organic stuff before it.",
     tags: ["Progress"],
     games: [{ gameId: 1, entryId: 0 }],
@@ -117,7 +117,7 @@ export const dayEntries = [
   {
     dayId: 8,
     date: "2025-12-14T19:15:00.000Z",
-    title: null,
+    title: '',
     text: "Picked up Astral Chain in the sale. Haven't started it yet but wanted to log that it's in the queue. Spent most of tonight finishing off a few sidequests in Xenoblade instead — the Uraya region has some good ones. Bana is a brilliant villain, completely ridiculous in exactly the right way.",
     tags: ["New Purchase"],
     games: [{ gameId: 1, entryId: 0 }],
@@ -133,7 +133,7 @@ export const dayEntries = [
   {
     dayId: 10,
     date: "2025-12-28T16:00:00.000Z",
-    title: null,
+    title: '',
     text: "Lazy Sunday between Christmas and new year. Finally put a few hours into Astral Chain. The tone is completely different to what I expected — way more anime and stylised than the trailers suggested. Combat is satisfying once the Legion system clicks. The city hub sections have a nice investigative feel, reminds me a bit of Nier in how it builds the world quietly.",
     tags: ["Chill"],
     games: [{ gameId: 2, entryId: 0 }],
@@ -149,7 +149,7 @@ export const dayEntries = [
   {
     dayId: 12,
     date: "2026-01-07T21:00:00.000Z",
-    title: null,
+    title: '',
     text: "Chipped away at Astral Chain for a couple of hours. The combat is really opening up now — the chimera designs are getting more creative and the fights are starting to feel like puzzles. The sync attack system when you line up correctly with your legion is incredibly satisfying. This might be Platinum's best looking game.",
     tags: ["Combat"],
     games: [{ gameId: 2, entryId: 0 }],
@@ -157,7 +157,7 @@ export const dayEntries = [
   {
     dayId: 13,
     date: "2026-01-11T19:00:00.000Z",
-    title: null,
+    title: '',
     text: "Ordered a PS1 and some games off eBay tonight. Been thinking about it for a while — there's a whole library I've never touched and emulation isn't the same. Got Xenogears, Parasite Eve and Vagrant Story in the lot. No RGB cable yet so I'll hold off starting any of them until it arrives.",
     tags: ["PS1", "New Purchase"],
     games: [],
@@ -165,7 +165,7 @@ export const dayEntries = [
   {
     dayId: 14,
     date: "2026-01-18T20:00:00.000Z",
-    title: null,
+    title: '',
     text: "Big session on Xenoblade. Finished Chapter 5 and pushed into 6. The tone has shifted noticeably — things are getting darker and the stakes feel real now. Rex's development has been gradual but it's paying off. Poppi QT Pi has completely replaced KOS-MOS in my main team composition, the customisation options are just better.",
     tags: ["Progress", "Story"],
     games: [{ gameId: 1, entryId: 1 }],
@@ -173,7 +173,7 @@ export const dayEntries = [
   {
     dayId: 15,
     date: "2026-01-24T21:30:00.000Z",
-    title: null,
+    title: '',
     text: "Astral Chain case file 7 done. The game keeps escalating in interesting ways — the chimeras are getting properly unsettling now. Found a few of the hidden items in the files that I'd completely missed on first pass. The investigation sections reward thoroughness in a way that doesn't feel tedious.",
     tags: ["Progress"],
     games: [{ gameId: 2, entryId: 0 }],
@@ -181,7 +181,7 @@ export const dayEntries = [
   {
     dayId: 16,
     date: "2026-01-30T22:15:00.000Z",
-    title: null,
+    title: '',
     text: "PS1 arrived. Composite cables only for now so I can't start any of the NTSC games yet, the rainbow shimmer is too distracting. Had a look at the menus and tested it was working though. RGB cable is on order — apparently back in stock in February. Impatient but it's worth waiting for.",
     tags: ["PS1", "CRT"],
     games: [],
@@ -189,7 +189,7 @@ export const dayEntries = [
   {
     dayId: 17,
     date: "2026-02-04T20:30:00.000Z",
-    title: null,
+    title: '',
     text: "Finished Astral Chain. The final act goes completely off the rails in the best possible way — Platinum clearly saved the wildest ideas for the end. Credits rolled at about 30 hours. Not sure I'll go back for S ranks but I'm satisfied with where I ended up. Back to focusing on Xenoblade as the main game now.",
     tags: ["Finished", "Credits"],
     games: [{ gameId: 2, entryId: 0 }],
@@ -197,7 +197,7 @@ export const dayEntries = [
   {
     dayId: 18,
     date: "2026-02-09T19:00:00.000Z",
-    title: null,
+    title: '',
     text: "Heavy Xenoblade session. Deep into the affinity charts now — this is the part everyone warns you about. Some of the field skill requirements are annoying but the blade content attached to them is genuinely good, lots of small stories you'd completely miss otherwise. Running the Switch Family Collective with a mate helps a lot for getting rare blades.",
     tags: ["Grinding", "Switch Family Collective"],
     games: [{ gameId: 1, entryId: 0 }],
@@ -205,7 +205,7 @@ export const dayEntries = [
   {
     dayId: 19,
     date: "2026-02-15T21:00:00.000Z",
-    title: null,
+    title: '',
     text: "Started thinking seriously about what's next after Xenoblade. The queue is getting long — Xenogears obviously, then probably Vagrant Story or Parasite Eve. Also want to go back to something shorter and action-focused at some point, maybe Bayonetta or Devil May Cry 5. For now still very much in the middle of Xenoblade though.",
     tags: ["Queue"],
     games: [{ gameId: 1, entryId: 2 }],
@@ -213,7 +213,7 @@ export const dayEntries = [
   {
     dayId: 20,
     date: "2026-02-22T20:00:00.000Z",
-    title: null,
+    title: '',
     text: "Made serious progress on the affinity charts tonight. Rex, Pyra, and Nia are all done. The endgame feels close — maybe five or six sessions away. Starting to feel bittersweet about finishing it, I've had this as my main game for months. Going to miss the routine of it.",
     tags: ["Progress", "Affinity Charts"],
     games: [{ gameId: 1, entryId: 2 }],
@@ -221,7 +221,7 @@ export const dayEntries = [
   {
     dayId: 21,
     date: "2026-02-28T21:30:00.000Z",
-    title: null,
+    title: '',
     text: "RGB cable for the PS1 shipped — tracking says Tuesday. Almost done with the Xenoblade affinity work, just Zeke and Pandoria left which should be quick. Might line it up so I finish Xenoblade around the same time the cable arrives and I can start Xenogears as a clean handoff. That would be a good week.",
     tags: ["PS1", "Planning"],
     games: [{ gameId: 1, entryId: 2 }],
@@ -240,7 +240,7 @@ export const dayEntries = [
   {
     dayId: 2,
     date: "2026-03-08T20:10:00.000Z",
-    title: null,
+    title: '',
     text: "Quiet Sunday. Didn't do much today, cooked a big pasta in the afternoon and then just ended up on Xenoblade for most of the evening. Exactly the kind of day you need sometimes — no plans, no pressure, just the game. Chapter 7 delivered.",
     tags: ["Chill", "Sunday"],
     games: [
@@ -260,7 +260,7 @@ export const dayEntries = [
   {
     dayId: 4,
     date: "2026-03-16T19:30:00.000Z",
-    title: null,
+    title: '',
     text: "Got back from work later than planned and didn't have the energy for much. Put Xenogears on for an hour or so, made some progress but mostly just needed to decompress. The CRT warm-up glow is genuinely one of the most relaxing things to sit in front of.",
     tags: ["After Work"],
     games: [

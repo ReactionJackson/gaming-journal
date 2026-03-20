@@ -114,10 +114,11 @@ const GalleryItem = styled.div`
 `;
 
 const GalleryImg = styled.img`
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  background-color: #f6f6f6;
 `;
 
 export default function GameEntry({

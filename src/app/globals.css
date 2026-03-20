@@ -20,4 +20,6 @@
   list-style: none;
   box-sizing: border-box;
   user-select: none;
+  background: transparent;
+  font-family: var(--font-outfit);
 }
