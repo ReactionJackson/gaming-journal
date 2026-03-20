@@ -6,6 +6,8 @@ import {
   useRef,
   useState,
   useCallback,
+  forwardRef,
+  useImperativeHandle,
 } from "react";
 import styled from "styled-components";
 
@@ -75,14 +77,31 @@ const PlusCircle = styled.div`
   cursor: pointer;
 `;
 
-export default function Track({
-  entries = [],
-  activeIndex = 0,
-  onActiveChange,
-}) {
+const Track = forwardRef(function Track(
+  { entries = [], activeIndex = 0, onActiveChange },
+  ref,
+) {
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
   const [scrollPadding, setScrollPadding] = useState({ left: 0, right: 0 });
+
+  // ── Expose scrollToIndex for external callers (e.g. restoring from storage) ─
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollToIndex(index) {
+        const item = itemRefs.current[index];
+        if (item) {
+          item.scrollIntoView({
+            behavior: "instant",
+            inline: "center",
+            block: "nearest",
+          });
+        }
+      },
+    }),
+    [],
+  );
 
   // ── Padding so first/last items can reach centre ──────────────────────────
   useLayoutEffect(() => {
@@ -166,20 +185,19 @@ export default function Track({
   }, [onActiveChange]);
 
   // ── Click a circle — smooth scroll it to centre ───────────────────────────
-  const handleItemClick = useCallback(
-    (index) => {
-      const item = itemRefs.current[index];
-      if (item) {
-        item.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
-        });
-      }
-      onActiveChange?.(index);
-    },
-    [onActiveChange],
-  );
+  // No onActiveChange call here — the scroll listener handles it as the item
+  // arrives at centre. Calling it immediately on click causes a red flash
+  // before the scroll animation has moved anything.
+  const handleItemClick = useCallback((index) => {
+    const item = itemRefs.current[index];
+    if (item) {
+      item.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }, []);
 
   return (
     <TrackContainer>
@@ -210,4 +228,6 @@ export default function Track({
       </TrackInner>
     </TrackContainer>
   );
-}
+});
+
+export default Track;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import GameEntry from "@/components/GameEntry";
 import Track from "@/components/Track";
@@ -152,9 +152,33 @@ function resolveGameEntry(gameRef) {
   };
 }
 
+const STORAGE_KEY = "journal-active-day-id";
+
 export default function JournalPage() {
   // Start on the most recent entry (last in the sorted array)
   const [activeIndex, setActiveIndex] = useState(dayEntries.length - 1);
+  const trackRef = useRef(null);
+
+  // ── Restore last-viewed entry from localStorage ───────────────────────────
+  // Runs once on mount. The save is intentionally NOT in a separate effect —
+  // writing on mount would race with this read and overwrite the saved value
+  // with the default index before it can be restored.
+  useEffect(() => {
+    const savedId = localStorage.getItem(STORAGE_KEY);
+    if (savedId === null) return;
+    const idx = dayEntries.findIndex((e) => String(e.dayId) === savedId);
+    if (idx === -1) return;
+    setActiveIndex(idx);
+    trackRef.current?.scrollToIndex(idx);
+  }, []);
+
+  // ── Persist active entry — called on every user-driven change ─────────────
+  // Writing here (not in an effect) means we only save when the user actually
+  // navigates, so the mount read above is never overwritten by a stale default.
+  const handleActiveChange = useCallback((index) => {
+    setActiveIndex(index);
+    localStorage.setItem(STORAGE_KEY, String(dayEntries[index].dayId));
+  }, []);
 
   const dayEntry = dayEntries[activeIndex];
   const dayNum = new Date(dayEntry.date).getUTCDate();
@@ -193,9 +217,10 @@ export default function JournalPage() {
       </Container>
 
       <Track
+        ref={trackRef}
         entries={dayEntries}
         activeIndex={activeIndex}
-        onActiveChange={setActiveIndex}
+        onActiveChange={handleActiveChange}
       />
     </>
   );
