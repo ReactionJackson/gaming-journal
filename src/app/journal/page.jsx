@@ -37,8 +37,6 @@ const Header = styled.header`
   gap: 10px;
   backdrop-filter: blur(8px);
   background-color: rgba(255, 255, 255, 0.75);
-  transform: translateY(var(--vv-offset-top, 0px));
-  transition: transform 0.15s ease-out;
 `;
 
 const HeaderContent = styled.div`
@@ -189,6 +187,20 @@ export default function JournalPage() {
   const [activeDayEntry, setActiveDayEntry] = useState(dayEntries[activeIndex]);
   const [isEditing, setIsEditing] = useState(false);
   const trackRef = useRef(null);
+
+  // ── Keyboard detection — hide bottom chrome when any input is focused ─────
+  // Toggling a CSS class is synchronous and paint-free, avoiding the jitter
+  // that the Visual Viewport API causes when used to drive JS transforms.
+  useEffect(() => {
+    const open = () => document.body.classList.add("keyboard-open");
+    const close = () => document.body.classList.remove("keyboard-open");
+    document.addEventListener("focusin", open);
+    document.addEventListener("focusout", close);
+    return () => {
+      document.removeEventListener("focusin", open);
+      document.removeEventListener("focusout", close);
+    };
+  }, []);
 
   // ── Restore last-viewed entry from localStorage ───────────────────────────
   // Runs once on mount. The save is intentionally NOT in a separate effect —

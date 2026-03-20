@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styled from "styled-components";
@@ -20,8 +19,12 @@ const Container = styled.nav`
   background-color: #fff;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.05);
   z-index: 1000;
-  transform: translateY(calc(-1 * var(--keyboard-offset, 0px)));
-  transition: transform 0.15s ease-out;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+
+  body.keyboard-open & {
+    opacity: 0;
+    visibility: hidden;
+  }
 `;
 
 const links = [
@@ -32,39 +35,6 @@ const links = [
 
 export default function Nav() {
   const pathname = usePathname();
-
-  // Keep fixed elements pinned to the visual viewport (the actual visible area)
-  // rather than the layout viewport. When the iOS keyboard opens, the visual
-  // viewport shrinks but layout viewport doesn't — so position:fixed elements
-  // end up behind the keyboard without this. The CSS custom property is read
-  // by both Nav and Track so they move in sync.
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-
-    const update = () => {
-      const offset = window.innerHeight - vv.height - vv.offsetTop;
-      document.documentElement.style.setProperty(
-        "--keyboard-offset",
-        `${Math.max(0, offset)}px`
-      );
-      // offsetTop is how far the visual viewport's top edge has scrolled below
-      // the layout viewport's top — i.e. how much iOS has scrolled the page up
-      // to keep the focused input visible. Sticky elements pinned to top:0 of
-      // the layout will have disappeared above the visible area by this amount.
-      document.documentElement.style.setProperty(
-        "--vv-offset-top",
-        `${Math.max(0, vv.offsetTop)}px`
-      );
-    };
-
-    vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
-    return () => {
-      vv.removeEventListener("resize", update);
-      vv.removeEventListener("scroll", update);
-    };
-  }, []);
 
   return (
     <Container>
