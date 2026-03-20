@@ -15,7 +15,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 20px;
   /* bottom padding clears the Track (90px) + Nav (50px) with some breathing room */
-  padding: 20px 10px 180px 10px;
+  padding: 20px 20px 180px 20px;
 `;
 
 // ── Day entry ─────────────────────────────────────────────────────────────────
@@ -68,10 +68,10 @@ const FullDate = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-  color: #737373;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 300;
+  color: #777;
 `;
 
 const Tags = styled.div`

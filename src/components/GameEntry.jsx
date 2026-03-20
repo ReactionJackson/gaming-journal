@@ -17,7 +17,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: center;
   gap: 5px;
-  height: 70px;
+  height: 100px;
   background-color: #1a1a2e;
   background-repeat: no-repeat;
   background-position: center;
@@ -61,10 +61,10 @@ const Subtitle = styled.span`
 `;
 
 const Text = styled.p`
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-  color: #737373;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 300;
+  color: #777;
 `;
 
 const Tags = styled.div`
