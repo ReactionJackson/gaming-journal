@@ -55,9 +55,11 @@ const TrackInner = styled.div`
   align-items: center;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
+  touch-action: pan-x;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -82,6 +84,7 @@ const DateCircle = styled.div`
   color: #464646;
   border: 2px solid rgba(0, 0, 0, 0.1);
   transition: color 0.25s ease;
+  touch-action: pan-x;
 
   &[data-active="true"] {
     color: #ffffff;
