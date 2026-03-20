@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import styled from "styled-components";
 import GameEntry from "@/components/GameEntry";
 import Track from "@/components/Track";
+import { dayEntries, games } from "@/data/entries";
+
+// ── Layout ────────────────────────────────────────────────────────────────────
 
 const Container = styled.div`
   width: 100%;
@@ -10,8 +14,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px 10px 160px 10px;
+  /* bottom padding clears the Track (90px) + Nav (50px) with some breathing room */
+  padding: 20px 10px 180px 10px;
 `;
+
+// ── Day entry ─────────────────────────────────────────────────────────────────
 
 const DayEntry = styled.div`
   display: flex;
@@ -29,6 +36,7 @@ const DateNumber = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -92,103 +100,103 @@ const GameEntries = styled.ul`
   gap: 10px;
 `;
 
-const TrackItem = styled(DateNumber)`
-  flex-shrink: 0;
-  background-color: #ffffff;
-  color: #464646;
-  border: 2px solid #e2e2e2;
-  scroll-snap-align: center;
-`;
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-const dummyEntries = [
-  {
-    dayId: 1,
-    date: "2026-03-05T15:24:00.000Z",
-    title: "Leeds Gaming Market",
-    text: "Phil and Marc came over to today for the gaming market downstairs. Finally bought my original PlayStation, got a chipped region-unlocked one so I can play Parasite Eve, Xenogears and all that. I&apos;m gonna have to spend a bit to get them good quality but I&apos;ve always wanted to play them. I need to get an RGB cable as well as the NTSC games have a mad rainbow looking filter on top, but I&apos;ve found somewhere that does them and they&apos;re back in stock next month. Banging day anyway today, finished off with a Bundo as well 🤌",
-    tags: ["Phil", "Marc", "Gaming Market", "Bundo"],
-    games: [
-      {
-        gameId: 1,
-        entryId: 13,
-        cover:
-          "https://www.rpgfan.com/wp-content/uploads/2020/07/Xenoblade-Chronicles-Definitive-Edition-Artwork-023.jpg",
-        title: "Xenoblade Chronicles 2",
-        platform: "Nintendo Switch",
-        genre: "JRPG",
-        text: "Grinding some more affinity charts, got Patroka's finished and starting on Akhos.",
-        tags: ["Grinding", "Switch Family Colletive"],
-        gallery: [
-          "/test-images/screenshot.webp",
-          "/test-images/screenshot.webp",
-          "/test-images/screenshot.webp",
-        ],
-      },
-      {
-        gameId: 2,
-        entryId: 1,
-        cover:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-Lt5pkZMzgnYudP-sZO3le8mxiK8nxRaD8Q&s",
-        title: "Astral Chain",
-        platform: "Nintendo Switch",
-        genre: "Action",
-        text: "Started a new save finally, still looks so good man.",
-        tags: ["Revisiting"],
-        gallery: ["/test-images/screenshot.webp"],
-      },
-    ],
-  },
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+const DAYS = [
+  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 ];
 
-export default function JournalPage() {
-  const entry = dummyEntries[0];
+function formatTime(dateStr) {
+  const d = new Date(dateStr);
+  const h = d.getUTCHours();
+  const m = String(d.getUTCMinutes()).padStart(2, "0");
+  const period = h >= 12 ? "pm" : "am";
+  const hour = h % 12 || 12;
+  return `${hour}:${m}${period}`;
+}
 
-  const getDayNumber = () => new Date(entry.date).getDate();
-  const getDayName = () =>
-    new Date(entry.date).toLocaleString("default", { weekday: "long" });
-  const getMonthName = () =>
-    new Date(entry.date).toLocaleString("default", { month: "long" });
-  const getYear = () => new Date(entry.date).getFullYear();
+function formatMonthYear(dateStr) {
+  const d = new Date(dateStr);
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+function getDayName(dateStr) {
+  return DAYS[new Date(dateStr).getUTCDay()];
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+// Resolve a day entry's game references into full props for GameEntry.
+// gameRef = { gameId, entryId } where entryId is the index into game.entries.
+function resolveGameEntry(gameRef) {
+  const game = games.find((g) => g.gameId === gameRef.gameId);
+  if (!game) return null;
+  const entry = game.entries[gameRef.entryId];
+  if (!entry) return null;
+  return {
+    key: `${gameRef.gameId}-${gameRef.entryId}`,
+    // Game-level fields
+    cover: game.cover,
+    title: game.title,
+    platform: game.platform,
+    genre: game.genre,
+    // Entry-level fields
+    entryId: gameRef.entryId,
+    text: entry.text,
+    tags: entry.tags,
+    gallery: entry.gallery,
+  };
+}
+
+export default function JournalPage() {
+  // Start on the most recent entry (last in the sorted array)
+  const [activeIndex, setActiveIndex] = useState(dayEntries.length - 1);
+
+  const dayEntry = dayEntries[activeIndex];
+  const dayNum = new Date(dayEntry.date).getUTCDate();
+  const resolvedGames = dayEntry.games?.map(resolveGameEntry).filter(Boolean) ?? [];
 
   return (
     <>
       <Container>
         <DayEntry>
           <Header>
-            <DateNumber>{getDayNumber()}</DateNumber>
+            <DateNumber>{dayNum}</DateNumber>
             <Title>
               <FullDate>
-                {getMonthName()} {getYear()} <span>03:24pm</span>
+                {formatMonthYear(dayEntry.date)} <span>{formatTime(dayEntry.date)}</span>
               </FullDate>
-              {entry.title || getDayName()}
+              {dayEntry.title || getDayName(dayEntry.date)}
             </Title>
           </Header>
-          <Text>{entry.text}</Text>
-          <Tags>
-            {entry.tags.map((tag) => (
-              <Tag key={tag}>{tag}</Tag>
-            ))}
-          </Tags>
+          {dayEntry.text && <Text>{dayEntry.text}</Text>}
+          {dayEntry.tags?.length > 0 && (
+            <Tags>
+              {dayEntry.tags.map((tag) => (
+                <Tag key={tag}>{tag}</Tag>
+              ))}
+            </Tags>
+          )}
         </DayEntry>
-        <GameEntries>
-          {entry.games.map((data) => (
-            <GameEntry key={data.gameId} {...data} />
-          ))}
-        </GameEntries>
+
+        {resolvedGames.length > 0 && (
+          <GameEntries>
+            {resolvedGames.map(({ key, ...props }) => (
+              <GameEntry key={key} {...props} />
+            ))}
+          </GameEntries>
+        )}
       </Container>
-      <Track>
-        {dummyEntries.map(({ date }) => (
-          <TrackItem key={date}>{getDayNumber(date)}</TrackItem>
-        ))}
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-        <TrackItem>00</TrackItem>
-      </Track>
+
+      <Track
+        entries={dayEntries}
+        activeIndex={activeIndex}
+        onActiveChange={setActiveIndex}
+      />
     </>
   );
 }

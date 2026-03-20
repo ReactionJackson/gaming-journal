@@ -8,8 +8,9 @@ const Container = styled.nav`
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 50px;
   width: 100%;
+  height: 70px;
+  padding-bottom: 20px;
   border-top: 1px solid #eee;
   display: flex;
   gap: 40px;

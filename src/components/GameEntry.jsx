@@ -1,7 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import Image from "next/image";
 
 const Container = styled.li`
   display: flex;
@@ -19,12 +18,15 @@ const Header = styled.header`
   justify-content: center;
   gap: 5px;
   height: 70px;
-  background: url(${({ $src }) => $src}) no-repeat center;
+  background-color: #1a1a2e;
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
   & > * {
     z-index: 1;
     position: relative;
     color: #ffffff;
+    text-align: center;
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   }
   &::after {
@@ -103,14 +105,19 @@ const Gallery = styled.div`
 `;
 
 const GalleryItem = styled.div`
-  position: relative;
+  flex-shrink: 0;
   width: 100%;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
-  flex-shrink: 0;
   scroll-snap-align: start;
   border-radius: 10px;
   overflow: hidden;
+`;
+
+const GalleryImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 `;
 
 export default function GameEntry({
@@ -125,7 +132,7 @@ export default function GameEntry({
 }) {
   return (
     <Container>
-      <Header $src={cover}>
+      <Header style={{ backgroundImage: `url('${cover}')` }}>
         <Title>{title}</Title>
         <Subtitle>
           {platform} / {genre}
@@ -133,25 +140,25 @@ export default function GameEntry({
       </Header>
       <Content>
         <Text>
-          <Subtitle>Entry {entryId.toString().padStart(2, "0")}</Subtitle>
+          <Subtitle>Entry {String(entryId + 1).padStart(2, "0")}</Subtitle>
           {text}
         </Text>
-        <Tags>
-          {tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-        </Tags>
-        <Gallery>
-          {gallery.map((image, index) => (
-            <GalleryItem key={`gallery-item-${index}`}>
-              <Image
-                src={image}
-                alt={title}
-                fill
-              />
-            </GalleryItem>
-          ))}
-        </Gallery>
+        {tags?.length > 0 && (
+          <Tags>
+            {tags.map((tag) => (
+              <Tag key={tag}>{tag}</Tag>
+            ))}
+          </Tags>
+        )}
+        {gallery?.length > 0 && (
+          <Gallery>
+            {gallery.map((image, index) => (
+              <GalleryItem key={`gallery-item-${index}`}>
+                <GalleryImg src={image} alt={`${title} screenshot ${index + 1}`} />
+              </GalleryItem>
+            ))}
+          </Gallery>
+        )}
       </Content>
     </Container>
   );
