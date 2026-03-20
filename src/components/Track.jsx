@@ -164,12 +164,16 @@ const Track = forwardRef(function Track(
   const [scrollPadding, setScrollPadding] = useState({ left: 0, right: 0 });
 
   // Keep activeIndexRef in sync on every render
-  activeIndexRef.current = activeIndex;
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   // Keep onActiveCircleTap in a ref so the pointer handlers always call the
   // latest version without needing to be recreated on every render.
+  useEffect(() => {
+    onActiveCircleTapRef.current = onActiveCircleTap;
+  }, [onActiveCircleTap]);
   const onActiveCircleTapRef = useRef(onActiveCircleTap);
-  onActiveCircleTapRef.current = onActiveCircleTap;
 
   // Tracks the pointer-down position so we can distinguish a tap (< 5px
   // horizontal movement) from the start of a scroll gesture.
@@ -177,8 +181,10 @@ const Track = forwardRef(function Track(
 
   // ── Month + year ranges derived from entries ──────────────────────────────
   const { months, years } = useMemo(() => {
-    const monthMap = {}, monthOrder = [];
-    const yearMap = {}, yearOrder = [];
+    const monthMap = {},
+      monthOrder = [];
+    const yearMap = {},
+      yearOrder = [];
     entries.forEach((entry, i) => {
       const d = new Date(entry.date);
       const monthKey = `${d.getUTCFullYear()}-${d.getUTCMonth()}`;
@@ -223,7 +229,7 @@ const Track = forwardRef(function Track(
   // ── Month label positioning + colour — runs every scroll frame ────────────
   // Defined in the render body and stored in a ref so the scroll effect can
   // call it without it being a dependency.
-  const updateMonthLabels = () => {
+  const updateMonthLabels = useCallback(() => {
     const el = containerRef.current;
     if (!el || months.length === 0) return;
 
@@ -317,10 +323,12 @@ const Track = forwardRef(function Track(
 
       labelEl.style.color = `rgba(0,0,0,${opacity})`;
     });
-  };
+  }, [months, years]);
 
   // Keep the ref current on every render
-  updateMonthLabelsRef.current = updateMonthLabels;
+  useEffect(() => {
+    updateMonthLabelsRef.current = updateMonthLabels;
+  }, [updateMonthLabels]);
 
   // ── Expose scrollToIndex for external callers ─────────────────────────────
   useImperativeHandle(
@@ -433,8 +441,7 @@ const Track = forwardRef(function Track(
     };
 
     const findClosest = () => {
-      const containerCx =
-        el.getBoundingClientRect().left + el.clientWidth / 2;
+      const containerCx = el.getBoundingClientRect().left + el.clientWidth / 2;
       let closestIndex = null;
       let minDist = Infinity;
       itemRefs.current.forEach((itemEl, i) => {
