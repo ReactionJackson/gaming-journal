@@ -40,8 +40,8 @@ const RedIndicator = styled.div`
   transform: translate(-50%, 0) scale(1);
   opacity: 1;
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity 150ms ease,
+    transform 150ms ease;
   pointer-events: none;
 
   [data-scrolling="true"] & {
