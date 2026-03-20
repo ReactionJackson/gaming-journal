@@ -40,6 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# claude
-work-focus/
+# ignore generated daily files but track the spec
+work-focus/*
+!work-focus/spec.md
 .env*.local
