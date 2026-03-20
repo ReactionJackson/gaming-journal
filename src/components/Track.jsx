@@ -24,6 +24,8 @@ const TrackContainer = styled.div`
   z-index: 1000;
   backdrop-filter: blur(8px);
   background-color: rgba(255, 255, 255, 0.75);
+  transform: translateY(calc(-1 * var(--keyboard-offset, 0px)));
+  transition: transform 0.15s ease-out;
 `;
 
 // Fixed red circle — always centred in the track, behind the scrollable items.
