@@ -101,8 +101,10 @@ const TrackInner = styled.div`
   align-items: center;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
+  touch-action: pan-x;
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
