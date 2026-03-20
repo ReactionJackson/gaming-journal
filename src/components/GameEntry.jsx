@@ -17,7 +17,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: center;
   gap: 5px;
-  height: 100px;
+  height: 80px;
   background-color: #1a1a2e;
   background-repeat: no-repeat;
   background-position: center;
@@ -139,6 +139,18 @@ export default function GameEntry({
         </Subtitle>
       </Header>
       <Content>
+        {gallery?.length > 0 && (
+          <Gallery>
+            {gallery.map((image, index) => (
+              <GalleryItem key={`gallery-item-${index}`}>
+                <GalleryImg
+                  src={image}
+                  alt={`${title} screenshot ${index + 1}`}
+                />
+              </GalleryItem>
+            ))}
+          </Gallery>
+        )}
         <Text>
           <Subtitle>Entry {String(entryId + 1).padStart(2, "0")}</Subtitle>
           {text}
@@ -149,15 +161,6 @@ export default function GameEntry({
               <Tag key={tag}>{tag}</Tag>
             ))}
           </Tags>
-        )}
-        {gallery?.length > 0 && (
-          <Gallery>
-            {gallery.map((image, index) => (
-              <GalleryItem key={`gallery-item-${index}`}>
-                <GalleryImg src={image} alt={`${title} screenshot ${index + 1}`} />
-              </GalleryItem>
-            ))}
-          </Gallery>
         )}
       </Content>
     </Container>
