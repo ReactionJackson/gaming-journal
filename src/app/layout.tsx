@@ -11,8 +11,14 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Journal App",
+  title: "Gaming Journal",
   description: "Write about the games you love",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Gaming Journal",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
