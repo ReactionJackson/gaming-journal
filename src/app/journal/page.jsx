@@ -37,6 +37,8 @@ const Header = styled.header`
   gap: 10px;
   backdrop-filter: blur(8px);
   background-color: rgba(255, 255, 255, 0.75);
+  transform: translateY(var(--vv-offset-top, 0px));
+  transition: transform 0.15s ease-out;
 `;
 
 const HeaderContent = styled.div`

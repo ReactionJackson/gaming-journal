@@ -48,6 +48,14 @@ export default function Nav() {
         "--keyboard-offset",
         `${Math.max(0, offset)}px`
       );
+      // offsetTop is how far the visual viewport's top edge has scrolled below
+      // the layout viewport's top — i.e. how much iOS has scrolled the page up
+      // to keep the focused input visible. Sticky elements pinned to top:0 of
+      // the layout will have disappeared above the visible area by this amount.
+      document.documentElement.style.setProperty(
+        "--vv-offset-top",
+        `${Math.max(0, vv.offsetTop)}px`
+      );
     };
 
     vv.addEventListener("resize", update);
