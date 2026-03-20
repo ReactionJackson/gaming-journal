@@ -45,7 +45,7 @@ const RedIndicator = styled.div`
   pointer-events: none;
 
   [data-scrolling="true"] & {
-    opacity: 0.3;
+    opacity: 0.2;
     transform: translate(-50%, 0) scale(0.6);
   }
 `;
@@ -154,7 +154,7 @@ const PlusCircle = styled.div`
 `;
 
 const Track = forwardRef(function Track(
-  { entries = [], activeIndex = 0, onActiveChange },
+  { entries = [], activeIndex = 0, onActiveChange, onActiveCircleTap },
   ref,
 ) {
   const wrapperRef = useRef(null);
@@ -165,6 +165,15 @@ const Track = forwardRef(function Track(
 
   // Keep activeIndexRef in sync on every render
   activeIndexRef.current = activeIndex;
+
+  // Keep onActiveCircleTap in a ref so the pointer handlers always call the
+  // latest version without needing to be recreated on every render.
+  const onActiveCircleTapRef = useRef(onActiveCircleTap);
+  onActiveCircleTapRef.current = onActiveCircleTap;
+
+  // Tracks the pointer-down position so we can distinguish a tap (< 5px
+  // horizontal movement) from the start of a scroll gesture.
+  const tapRef = useRef({ startX: null, index: null });
 
   // ── Month + year ranges derived from entries ──────────────────────────────
   const { months, years } = useMemo(() => {
@@ -568,6 +577,19 @@ const Track = forwardRef(function Track(
               key={entry.dayId}
               ref={(el) => (itemRefs.current[i] = el)}
               onClick={() => handleItemClick(i)}
+              onPointerDown={(e) => {
+                tapRef.current = { startX: e.clientX, index: i };
+              }}
+              onPointerUp={(e) => {
+                const tap = tapRef.current;
+                if (
+                  tap.index === i &&
+                  Math.abs(e.clientX - tap.startX) < 5 &&
+                  i === activeIndexRef.current
+                ) {
+                  onActiveCircleTapRef.current?.();
+                }
+              }}
             >
               {dayNum}
             </DateCircle>

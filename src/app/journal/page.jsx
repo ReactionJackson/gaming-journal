@@ -55,12 +55,12 @@ const DateNumber = styled.span`
 `;
 
 const Title = styled.h1`
-  display: flex;
-  flex-direction: column;
-  gap: -2px;
   font-size: 22px;
   font-weight: 500;
   letter-spacing: -0.02em;
+  & > * {
+    margin: 3px 0 -2px 0;
+  }
 `;
 
 const FullDate = styled.div`
@@ -142,9 +142,9 @@ function formatTime(dateStr) {
   return `${hour}:${m}${period}`;
 }
 
-function formatMonthYear(dateStr) {
+function formatMonth(dateStr) {
   const d = new Date(dateStr);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  return `${MONTHS[d.getUTCMonth()]}`;
 }
 
 function getDayName(dateStr) {
@@ -216,7 +216,7 @@ export default function JournalPage() {
           <DateNumber>{dayNum}</DateNumber>
           <Title>
             <FullDate>
-              {formatMonthYear(dayEntry.date)}{" "}
+              {formatMonth(dayEntry.date)}{" "}
               <span>{formatTime(dayEntry.date)}</span>
             </FullDate>
             {dayEntry.title || getDayName(dayEntry.date)}
@@ -247,6 +247,7 @@ export default function JournalPage() {
         entries={dayEntries}
         activeIndex={activeIndex}
         onActiveChange={handleActiveChange}
+        onActiveCircleTap={() => console.log("switching to edit mode")}
       />
     </>
   );
