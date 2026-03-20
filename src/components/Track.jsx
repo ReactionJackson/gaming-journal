@@ -10,7 +10,8 @@ const TrackContainer = styled.div`
   width: 100%;
   height: 90px;
   display: flex;
-  justify-content: center;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
   align-items: center;
   gap: 10px;
   padding: 10px;
@@ -64,8 +65,8 @@ export default function Track({ children }) {
     <TrackContainer
       ref={containerRef}
       style={{
-        scrollPaddingLeft: scrollPadding.left,
-        scrollPaddingRight: scrollPadding.right,
+        paddingInlineStart: scrollPadding.left,
+        paddingInlineEnd: scrollPadding.right,
       }}
     >
       {children}

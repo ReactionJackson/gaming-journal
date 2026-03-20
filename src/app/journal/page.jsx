@@ -97,7 +97,7 @@ const TrackItem = styled(DateNumber)`
   background-color: #ffffff;
   color: #464646;
   border: 2px solid #e2e2e2;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
 `;
 
 const dummyEntries = [
