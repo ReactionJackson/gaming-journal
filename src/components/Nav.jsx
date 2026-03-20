@@ -2,6 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import styled from "styled-components";
+
+const Container = styled.nav`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 50px;
+  width: 100%;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+`;
 
 const links = [
   { href: "/journal", label: "Journal" },
@@ -13,7 +30,7 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav style={{ padding: "16px 24px", borderBottom: "1px solid #eee", display: "flex", gap: 24 }}>
+    <Container>
       {links.map(({ href, label }) => (
         <Link
           key={href}
@@ -27,6 +44,6 @@ export default function Nav() {
           {label}
         </Link>
       ))}
-    </nav>
+    </Container>
   );
 }

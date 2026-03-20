@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import styled from "styled-components";
+import GameEntry from "@/components/GameEntry";
 import Track from "@/components/Track";
 
 const Container = styled.div`
@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px 10px 180px 10px;
+  padding: 20px 10px 160px 10px;
 `;
 
 const DayEntry = styled.div`
@@ -25,7 +25,7 @@ const Header = styled.header`
   gap: 10px;
 `;
 
-const Date = styled.span`
+const DateNumber = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,9 +73,12 @@ const Tags = styled.div`
 `;
 
 const Tag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 26px;
   border-radius: 13px;
-  padding: 4px 10px;
+  padding: 0 10px;
   background-color: #ddf1d9;
   border: 2px solid #56ba40;
   color: #56ba40;
@@ -83,81 +86,109 @@ const Tag = styled.div`
   font-weight: 700;
 `;
 
-const TrackItem = styled.li`
+const GameEntries = styled.ul`
   display: flex;
-  align-items: center;
-  height: 100%;
-  aspect-ratio: 1 / 1;
-  justify-content: space-between;
-  border: 2px solid #e4e4e7;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const TrackItem = styled(DateNumber)`
+  flex-shrink: 0;
+  background-color: #ffffff;
+  color: #464646;
+  border: 2px solid #e2e2e2;
   scroll-snap-align: start;
 `;
 
 const dummyEntries = [
   {
-    id: 1,
-    date: "2026-03-14",
+    dayId: 1,
+    date: "2026-03-05T15:24:00.000Z",
     title: "Leeds Gaming Market",
-    text: "Went to the gaming market with Phil and Marc and got a bunch of PS1 games.",
+    text: "Phil and Marc came over to today for the gaming market downstairs. Finally bought my original PlayStation, got a chipped region-unlocked one so I can play Parasite Eve, Xenogears and all that. I&apos;m gonna have to spend a bit to get them good quality but I&apos;ve always wanted to play them. I need to get an RGB cable as well as the NTSC games have a mad rainbow looking filter on top, but I&apos;ve found somewhere that does them and they&apos;re back in stock next month. Banging day anyway today, finished off with a Bundo as well 🤌",
+    tags: ["Phil", "Marc", "Gaming Market", "Bundo"],
     games: [
       {
-        id: 1,
+        gameId: 1,
+        entryId: 13,
+        cover:
+          "https://www.rpgfan.com/wp-content/uploads/2020/07/Xenoblade-Chronicles-Definitive-Edition-Artwork-023.jpg",
         title: "Xenoblade Chronicles 2",
+        platform: "Nintendo Switch",
+        genre: "JRPG",
         text: "Grinding some more affinity charts, got Patroka's finished and starting on Akhos.",
-        tags: ["@BIGstainE", "Grinding", "Switch Family Colletive"],
-        images: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
+        tags: ["Grinding", "Switch Family Colletive"],
+        gallery: [
+          "/test-images/screenshot.webp",
+          "/test-images/screenshot.webp",
+          "/test-images/screenshot.webp",
         ],
       },
-    ],
-  },
-  {
-    id: 2,
-    date: "2026-03-16",
-    title: "Second Entry Title",
-    text: "Second Entry Text",
-    games: [
       {
-        id: 1,
-        title: "Xenoblade Chronicles 2",
-        text: "More grinding, more affinity charts.",
-        tags: ["Relaxing"],
-        images: ["https://via.placeholder.com/150"],
+        gameId: 2,
+        entryId: 1,
+        cover:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-Lt5pkZMzgnYudP-sZO3le8mxiK8nxRaD8Q&s",
+        title: "Astral Chain",
+        platform: "Nintendo Switch",
+        genre: "Action",
+        text: "Started a new save finally, still looks so good man.",
+        tags: ["Revisiting"],
+        gallery: ["/test-images/screenshot.webp"],
       },
     ],
   },
 ];
 
 export default function JournalPage() {
+  const entry = dummyEntries[0];
+
+  const getDayNumber = () => new Date(entry.date).getDate();
+  const getDayName = () =>
+    new Date(entry.date).toLocaleString("default", { weekday: "long" });
+  const getMonthName = () =>
+    new Date(entry.date).toLocaleString("default", { month: "long" });
+  const getYear = () => new Date(entry.date).getFullYear();
+
   return (
-    <Container>
-      <DayEntry>
-        <Header>
-          <Date>05</Date>
-          <Title>
-            <FullDate>
-              March 2026 <span>03:24pm</span>
-            </FullDate>
-            Leeds Gaming Market
-          </Title>
-        </Header>
-        <Text>
-          Phil and Marc came over to today for the gaming market downstairs.
-          Finally bought my original PlayStation, got a chipped region-unlocked
-          one so I can play Parasite Eve, Xenogears and all that. I&apos;m gonna
-          have to spend a bit to get them good quality but I&apos;ve always
-          wanted to play them. I need to get an RGB cable as well as the NTSC
-          games have a mad rainbow looking filter on top, but I&apos;ve found
-          somewhere that does them and they&apos;re back in stock next month.
-          Banging day anyway today, finished off with a Bundo as well 🤌
-        </Text>
-        <Tags>
-          <Tag>BIGstainE</Tag>
-          <Tag>Grinding</Tag>
-          <Tag>Switch Family Colletive</Tag>
-        </Tags>
-      </DayEntry>
-    </Container>
+    <>
+      <Container>
+        <DayEntry>
+          <Header>
+            <DateNumber>{getDayNumber()}</DateNumber>
+            <Title>
+              <FullDate>
+                {getMonthName()} {getYear()} <span>03:24pm</span>
+              </FullDate>
+              {entry.title || getDayName()}
+            </Title>
+          </Header>
+          <Text>{entry.text}</Text>
+          <Tags>
+            {entry.tags.map((tag) => (
+              <Tag key={tag}>{tag}</Tag>
+            ))}
+          </Tags>
+        </DayEntry>
+        <GameEntries>
+          {entry.games.map((data) => (
+            <GameEntry key={data.gameId} {...data} />
+          ))}
+        </GameEntries>
+      </Container>
+      <Track>
+        {dummyEntries.map(({ date }) => (
+          <TrackItem key={date}>{getDayNumber(date)}</TrackItem>
+        ))}
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+        <TrackItem>00</TrackItem>
+      </Track>
+    </>
   );
 }
