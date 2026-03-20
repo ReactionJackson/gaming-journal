@@ -51,6 +51,8 @@ const RedIndicator = styled.div`
 const TrackInner = styled.div`
   position: relative;
   z-index: 1;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -135,13 +137,10 @@ const Track = forwardRef(function Track(
     ref,
     () => ({
       scrollToIndex(index) {
+        const el = containerRef.current;
         const item = itemRefs.current[index];
-        if (item) {
-          item.scrollIntoView({
-            behavior: "instant",
-            inline: "center",
-            block: "nearest",
-          });
+        if (el && item) {
+          el.scrollLeft = item.offsetLeft - el.clientWidth / 2 + item.offsetWidth / 2;
         }
       },
     }),
@@ -173,17 +172,20 @@ const Track = forwardRef(function Track(
   }, [entries.length]);
 
   // ── Centre active item + set initial text colour once padding is ready ─────
-  useLayoutEffect(() => {
+  // Uses direct scrollLeft assignment (not scrollIntoView) — more reliable in
+  // fixed-position containers where scrollIntoView timing can be inconsistent
+  // on first mount. Wrapped in rAF so the inline padding styles are fully
+  // committed to layout before we measure offsetLeft.
+  useEffect(() => {
     if (scrollPadding.left === 0 && scrollPadding.right === 0) return;
+    const el = containerRef.current;
     const item = itemRefs.current[activeIndex];
-    if (item) {
-      item.scrollIntoView({
-        behavior: "instant",
-        inline: "center",
-        block: "nearest",
-      });
-    }
-    applyVisualActive(activeIndex);
+    if (!el || !item) return;
+    const raf = requestAnimationFrame(() => {
+      el.scrollLeft = item.offsetLeft - el.clientWidth / 2 + item.offsetWidth / 2;
+      applyVisualActive(activeIndex);
+    });
+    return () => cancelAnimationFrame(raf);
   }, [scrollPadding]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Sync visual active when activeIndex changes from outside ─────────────
