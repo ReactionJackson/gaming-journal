@@ -15,7 +15,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 20px;
   /* bottom padding clears the Track (90px) + Nav (50px) with some breathing room */
-  padding: 20px 20px 180px 20px;
+  padding: 0 20px 170px 20px;
 `;
 
 // ── Day entry ─────────────────────────────────────────────────────────────────
@@ -23,13 +23,20 @@ const Container = styled.div`
 const DayEntry = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+  margin-top: -10px;
 `;
 
 const Header = styled.header`
+  position: sticky;
+  top: 0;
+  padding: 20px 0 10px 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 10px;
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.75);
 `;
 
 const DateNumber = styled.span`
@@ -103,11 +110,27 @@ const GameEntries = styled.ul`
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 const DAYS = [
-  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
 
 function formatTime(dateStr) {
@@ -182,21 +205,23 @@ export default function JournalPage() {
 
   const dayEntry = dayEntries[activeIndex];
   const dayNum = new Date(dayEntry.date).getUTCDate();
-  const resolvedGames = dayEntry.games?.map(resolveGameEntry).filter(Boolean) ?? [];
+  const resolvedGames =
+    dayEntry.games?.map(resolveGameEntry).filter(Boolean) ?? [];
 
   return (
     <>
       <Container>
+        <Header>
+          <DateNumber>{dayNum}</DateNumber>
+          <Title>
+            <FullDate>
+              {formatMonthYear(dayEntry.date)}{" "}
+              <span>{formatTime(dayEntry.date)}</span>
+            </FullDate>
+            {dayEntry.title || getDayName(dayEntry.date)}
+          </Title>
+        </Header>
         <DayEntry>
-          <Header>
-            <DateNumber>{dayNum}</DateNumber>
-            <Title>
-              <FullDate>
-                {formatMonthYear(dayEntry.date)} <span>{formatTime(dayEntry.date)}</span>
-              </FullDate>
-              {dayEntry.title || getDayName(dayEntry.date)}
-            </Title>
-          </Header>
           {dayEntry.text && <Text>{dayEntry.text}</Text>}
           {dayEntry.tags?.length > 0 && (
             <Tags>

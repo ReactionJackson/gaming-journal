@@ -22,8 +22,8 @@ const TrackContainer = styled.div`
   width: 100%;
   height: 90px;
   z-index: 1000;
-  background-color: #fff;
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.75);
 `;
 
 // Fixed red circle — always centred in the track, behind the scrollable items.

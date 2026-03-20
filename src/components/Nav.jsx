@@ -17,7 +17,7 @@ const Container = styled.nav`
   justify-content: center;
   align-items: center;
   background-color: #fff;
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.05);
   z-index: 1000;
 `;
 

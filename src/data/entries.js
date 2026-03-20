@@ -275,6 +275,8 @@ export const dayEntries = [
     tags: ["Dev", "PWA", "Morning Session"],
     games: [
       { gameId: 1, entryId: 2 },
+      { gameId: 2, entryId: 0 },
+      { gameId: 3, entryId: 0 },
     ],
   },
 ];
