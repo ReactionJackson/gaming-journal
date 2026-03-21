@@ -3,7 +3,12 @@
 import usePushNotification from "@/hooks/usePushNotification";
 
 export default function FriendsPage() {
-  const { send, sending, error } = usePushNotification({ message: "hello" });
+  const { send, sending, error } = usePushNotification({
+    message: "Write an entry for today?",
+    onReturn: (message) => {
+      alert('Welcome back from the tap!');
+    },
+  });
 
   function handleClick() {
     send({ delay: 10 });

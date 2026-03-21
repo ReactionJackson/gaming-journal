@@ -13,12 +13,18 @@ function urlBase64ToUint8Array(base64String) {
   return arr;
 }
 
-export default function usePushNotification({ message = "hello" } = {}) {
+export default function usePushNotification({ message = "hello", onReturn } = {}) {
   const swRegRef = useRef(null);
   const subscriptionRef = useRef(null);
+  const onReturnRef = useRef(onReturn);
   const [ready, setReady] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
+
+  // Keep the callback ref fresh without re-running the effect
+  useEffect(() => {
+    onReturnRef.current = onReturn;
+  }, [onReturn]);
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -29,6 +35,16 @@ export default function usePushNotification({ message = "hello" } = {}) {
       if (existing) subscriptionRef.current = existing;
       setReady(true);
     });
+
+    // Listen for messages from the service worker (notification taps)
+    function handleSWMessage(event) {
+      if (event.data?.type === "notification-click") {
+        onReturnRef.current?.(event.data.message);
+      }
+    }
+
+    navigator.serviceWorker.addEventListener("message", handleSWMessage);
+    return () => navigator.serviceWorker.removeEventListener("message", handleSWMessage);
   }, []);
 
   const subscribe = useCallback(async () => {
