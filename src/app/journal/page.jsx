@@ -15,7 +15,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 0 20px 170px 20px;
+  padding: 140px 20px 170px 20px;
 `;
 
 // ── Day entry ─────────────────────────────────────────────────────────────────
@@ -28,8 +28,10 @@ const DayEntry = styled.div`
 `;
 
 const Header = styled.header`
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: 60px;
+  width: 100%;
+  height: 70px;
   padding: 20px 0 10px 0;
   z-index: 1000;
   display: flex;

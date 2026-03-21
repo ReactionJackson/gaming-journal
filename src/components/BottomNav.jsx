@@ -27,7 +27,7 @@ const links = [
   { href: "/friends", label: "Friends" },
 ];
 
-export default function Nav() {
+export default function BottomNav() {
   const pathname = usePathname();
 
   return (

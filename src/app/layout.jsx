@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
+import BottomNav from "@/components/BottomNav";
+import TopNav from "@/components/TopNav";
 import StyledComponentsRegistry from "@/lib/registry";
 
 const outfit = Outfit({
@@ -10,7 +10,7 @@ const outfit = Outfit({
   variable: "--font-outfit",
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Gaming Journal",
   description: "Write about the games you love",
   appleWebApp: {
@@ -21,16 +21,13 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${outfit.variable}`}>
+        <TopNav />
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
-        <Nav />
+        <BottomNav />
       </body>
     </html>
   );
