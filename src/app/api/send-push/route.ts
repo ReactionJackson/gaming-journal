@@ -9,7 +9,7 @@ webpush.setVapidDetails(
 
 export async function POST(request: NextRequest) {
   try {
-    const { subscription, delay = 10 } = await request.json();
+    const { subscription, message = 'hello', delay = 0 } = await request.json();
 
     if (!subscription || !subscription.endpoint) {
       return NextResponse.json({ error: 'Missing push subscription' }, { status: 400 });
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       subscription,
       JSON.stringify({
         title: 'Gaming Journal',
-        body: 'hello'
+        body: message
       })
     );
 
