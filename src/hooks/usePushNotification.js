@@ -26,6 +26,7 @@ export default function usePushNotification({ message = "hello", onReturn } = {}
     onReturnRef.current = onReturn;
   }, [onReturn]);
 
+  // Register service worker
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
@@ -35,16 +36,21 @@ export default function usePushNotification({ message = "hello", onReturn } = {}
       if (existing) subscriptionRef.current = existing;
       setReady(true);
     });
+  }, []);
 
-    // Listen for messages from the service worker (notification taps)
-    function handleSWMessage(event) {
-      if (event.data?.type === "notification-click") {
-        onReturnRef.current?.(event.data.message);
-      }
+  // Check URL params on mount — this is how we detect the user tapped a notification
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("from") === "push") {
+      const msg = params.get("message") || "";
+      // Clean the URL so it doesn't re-trigger on refresh
+      const url = new URL(window.location.href);
+      url.searchParams.delete("from");
+      url.searchParams.delete("message");
+      window.history.replaceState({}, "", url.pathname);
+      // Fire the callback
+      onReturnRef.current?.(msg);
     }
-
-    navigator.serviceWorker.addEventListener("message", handleSWMessage);
-    return () => navigator.serviceWorker.removeEventListener("message", handleSWMessage);
   }, []);
 
   const subscribe = useCallback(async () => {
