@@ -13,6 +13,25 @@ function urlBase64ToUint8Array(base64String) {
   return arr;
 }
 
+// Check if the service worker stored a notification click in the cache
+async function checkForPushClick() {
+  try {
+    const cache = await caches.open("push-clicks");
+    const response = await cache.match("/push-click-data");
+    if (!response) return null;
+
+    // Delete it immediately so it only fires once
+    await cache.delete("/push-click-data");
+
+    const data = await response.json();
+    // Ignore clicks older than 30 seconds
+    if (Date.now() - data.timestamp > 30000) return null;
+    return data.message;
+  } catch {
+    return null;
+  }
+}
+
 export default function usePushNotification({ message = "hello", onReturn } = {}) {
   const swRegRef = useRef(null);
   const subscriptionRef = useRef(null);
@@ -21,7 +40,7 @@ export default function usePushNotification({ message = "hello", onReturn } = {}
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
 
-  // Keep the callback ref fresh without re-running the effect
+  // Keep the callback ref fresh
   useEffect(() => {
     onReturnRef.current = onReturn;
   }, [onReturn]);
@@ -38,19 +57,25 @@ export default function usePushNotification({ message = "hello", onReturn } = {}
     });
   }, []);
 
-  // Check URL params on mount — this is how we detect the user tapped a notification
+  // Check for notification click on mount and whenever the app becomes visible
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("from") === "push") {
-      const msg = params.get("message") || "";
-      // Clean the URL so it doesn't re-trigger on refresh
-      const url = new URL(window.location.href);
-      url.searchParams.delete("from");
-      url.searchParams.delete("message");
-      window.history.replaceState({}, "", url.pathname);
-      // Fire the callback
-      onReturnRef.current?.(msg);
+    async function handleReturn() {
+      const msg = await checkForPushClick();
+      if (msg) onReturnRef.current?.(msg);
     }
+
+    // Check immediately on mount (app was opened fresh from notification)
+    handleReturn();
+
+    // Check when app comes back to foreground (was backgrounded)
+    function onVisibilityChange() {
+      if (document.visibilityState === "visible") {
+        handleReturn();
+      }
+    }
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
   }, []);
 
   const subscribe = useCallback(async () => {
@@ -69,7 +94,6 @@ export default function usePushNotification({ message = "hello", onReturn } = {}
       setError(null);
 
       try {
-        // Request permission if needed
         if (Notification.permission !== "granted") {
           const perm = await Notification.requestPermission();
           if (perm !== "granted") {
@@ -77,7 +101,6 @@ export default function usePushNotification({ message = "hello", onReturn } = {}
           }
         }
 
-        // Subscribe if not already
         let sub = subscriptionRef.current;
         if (!sub) {
           sub = await subscribe();

@@ -15,20 +15,27 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  var message = encodeURIComponent(event.notification.data?.message || '');
-  var url = '/friends?from=push&message=' + message;
+  var message = event.notification.data?.message || '';
 
+  // Store the click data in the Cache API so the app can read it
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-      // If the app is already open, navigate it
+    caches.open('push-clicks').then(function(cache) {
+      var response = new Response(JSON.stringify({
+        message: message,
+        timestamp: Date.now()
+      }));
+      return cache.put('/push-click-data', response);
+    }).then(function() {
+      return clients.matchAll({ type: 'window', includeUncontrolled: true });
+    }).then(function(clientList) {
+      // Try to focus an existing window
       for (var i = 0; i < clientList.length; i++) {
-        var client = clientList[i];
-        if ('navigate' in client) {
-          return client.navigate(url).then(function(c) { return c.focus(); });
+        if ('focus' in clientList[i]) {
+          return clientList[i].focus();
         }
       }
-      // Otherwise open a new window
-      return clients.openWindow(url);
+      // Otherwise open the app
+      return clients.openWindow('/friends');
     })
   );
 });
